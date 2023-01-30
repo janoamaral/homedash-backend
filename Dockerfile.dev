@@ -1,0 +1,15 @@
+FROM golang:latest
+
+ENV PROJECT_DIR=/APP
+ENV GO111MODULE=on
+ENV CGO_ENABLED=0
+ENV PORT=8080
+
+WORKDIR /app
+RUN mkdir "/build"
+COPY . .
+RUN go get github.com/githubnemo/CompileDaemon
+RUN go install github.com/githubnemo/CompileDaemon
+RUN go mod tidy
+RUN go get github.com/gin-gonic/gin
+ENTRYPOINT CompileDaemon -build="go build -o /build/app" -command="/build/app"
